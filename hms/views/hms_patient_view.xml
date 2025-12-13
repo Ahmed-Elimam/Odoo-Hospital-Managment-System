@@ -11,6 +11,7 @@
                     <field name="age"/>
                     <field name="blood_type"/>
                     <field name="pcr"/>
+                    <field name="email"/>
                     <field name="states"/>
                 </list>
             </field>
@@ -28,6 +29,7 @@
                                     <field name="last_name"/>
                                     <field name="birthdate"/>
                                     <field name="age"/>
+                                    <field name="email"/>
                                     <field name="address"/>
                                     <field name="image"/>
                                 </group>
@@ -41,7 +43,7 @@
                                     <field name="cr_ratio" required="pcr == True"/>
                                     <field name="department_id" domain="[('is_opened','=',True)]"/>
                                     <field name="department_capacity"/>
-                                    <field name="doctors_ids" widget="many2many_tags" readonly="department_id == False"/>
+                                    <field name="doctors_ids" widget="many2many_tags" readonly="department_id == False" groups="hms.hms_manager_group"/>
                                 </group>
                             </page>
                             <page string="Patient Log">

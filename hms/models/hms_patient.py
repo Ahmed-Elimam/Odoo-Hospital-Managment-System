@@ -1,10 +1,8 @@
-from operator import truediv
-from typing import Self
-
 from odoo import fields,models, api
 from datetime import date
+import re
 
-from odoo.orm.types import ValuesType
+from odoo.exceptions import ValidationError
 
 
 class HmsPatient(models.Model):
@@ -28,13 +26,27 @@ class HmsPatient(models.Model):
     pcr = fields.Boolean()
     image = fields.Image()
     address = fields.Text()
-    age = fields.Integer(compute="calc_age")
+    age = fields.Integer(compute="calc_age", store=True)
     department_id = fields.Many2one("hms.department",string = "Department")
     department_capacity = fields.Integer(related="department_id.capacity")
     doctors_ids = fields.Many2many(comodel_name="hms.doctor")
     log_ids = fields.One2many("hms.patient.log","patient_id")
     states = fields.Selection([("Good","Good"),("Undetermined","Undetermined"),("Fair","Fair"),("Serious","Serious")]
                               , default="Undetermined", string="State")
+    email = fields.Char()
+
+    # _sql_constrains = [("email_uniq","UNIQUE(email)","The Email you entered already exist")] removed for odoo19
+    _email_unique = models.Constraint('UNIQUE(email)','This Email Already Exist')
+
+    @api.constrains("email")
+    def check_email(self):
+        for record in self:
+            if record.email:
+                email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(email_pattern,record.email):
+                    raise ValidationError("Please Enter a Valid Email Address")
+
+
 
     @api.depends('birthdate')
     def calc_age(self):

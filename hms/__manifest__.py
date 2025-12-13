@@ -5,6 +5,8 @@
         This is a Hospital Management system to manage patients and doctors relations, patients tests and more
     """ ,
     'data' : [
+        'security/hms_security.xml' ,
+        'security/ir.model.access.csv' ,
         'views/hms_patient_view.xml' ,
         'views/hms_department_view.xml' ,
         'views/hms_doctor_view.xml' ,
